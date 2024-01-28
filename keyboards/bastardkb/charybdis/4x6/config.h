@@ -27,3 +27,6 @@
 #    define RGB_MATRIX_SPLIT \
         { 29, 29 }
 #endif
+
+#undef SOFT_SERIAL_PIN
+#define SOFT_SERIAL_PIN GP12
