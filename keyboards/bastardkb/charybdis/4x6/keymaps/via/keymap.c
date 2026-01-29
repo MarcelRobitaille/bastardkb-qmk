@@ -27,6 +27,11 @@ enum charybdis_keymap_layers {
     LAYER_POINTER,
 };
 
+enum custom_keycodes {
+    WORDL = SAFE_RANGE,
+    WORDR
+};
+
 /** \brief Automatically enable sniping-mode on the pointer layer. */
 #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
 
@@ -64,6 +69,27 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define PT_SPC LT(LAYER_LOWER, KC_SPC)
 #define PT_ENT LT(LAYER_RAISE, KC_ENT)
 
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case WORDL:
+        {
+            if (record->event.pressed) {
+               SEND_STRING(SS_LCTL(SS_TAP(X_LEFT))); // selects all and copies
+            }
+            break;
+        }
+        case WORDR:
+        {
+            if (record->event.pressed) {
+               SEND_STRING(SS_LCTL(SS_TAP(X_RIGHT))); // selects all and copies
+            }
+            break;
+        }
+    }
+
+    return true;
+};
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT(
@@ -83,11 +109,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_LOWER] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       KC_F12,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   KC_F8, XXXXXXX,    KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, XXXXXXX,
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   KC_F8, XXXXXXX,    KC_HOME,  WORDL,   WORDR,   KC_END, XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       XXXXXXX, XXXXXXX, XXXXXXX,  KC_DEL,  KC_INS, XXXXXXX,    KC_LEFT, KC_DOWN,   KC_UP, KC_RIGHT, XXXXXXX, XXXXXXX,
+       XXXXXXX, XXXXXXX, XXXXXXX,  KC_DEL,  KC_INS, XXXXXXX,    KC_LEFT, KC_DOWN,  KC_UP, KC_RIGHT, XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,  KC_EQL, KC_PLUS, XXXXXXX, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
